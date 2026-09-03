@@ -122,6 +122,7 @@ a{ text-decoration:none; color:inherit; }
 .nav-card.card-add .icon{ background:var(--sage-light); }
 .nav-card.card-search .icon{ background:var(--gold-light); }
 .nav-card.card-finance .icon{ background:#EAD9D4; }
+.nav-card.card-appointments .icon{ background:var(--sage-light); }
 .nav-card .title{ font-family:'Cairo', sans-serif; font-weight:700; font-size:1.05rem; color:var(--ink); }
 .nav-card .desc{ font-size:0.82rem; color:var(--ink-soft); line-height:1.6; }
 
@@ -325,6 +326,52 @@ table.rev-table td{ padding:9px 6px; border-bottom:1px solid var(--line); }
 .tag{ display:inline-block; font-size:0.72rem; padding:2px 8px; border-radius:10px; background:var(--sage-light); color:var(--sage); font-weight:600; }
 .tag.manual{ background:var(--gold-light); color:var(--gold); }
 .tag.expense{ background:#EAD9D4; color:var(--brick-dark); }
+
+/* Appointment tickets */
+.appt-ticket{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-right:4px solid var(--gold);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.appt-ticket.overdue{ border-right-color:var(--brick); }
+.appt-main{ flex:1; min-width:200px; }
+.appt-name{ font-family:'Cairo',sans-serif; font-weight:700; font-size:1rem; margin-bottom:2px; }
+.appt-meta{ color:var(--ink-soft); font-size:0.82rem; line-height:1.7; }
+.appt-side{ text-align:left; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.appt-date{ font-family:'Cairo',sans-serif; font-weight:700; color:var(--ink); font-size:0.95rem; white-space:nowrap; }
+
+/* Reminder banner */
+.reminder-banner{
+  background:var(--gold-light);
+  border:1px solid var(--gold);
+  color:var(--ink);
+  padding:12px 16px;
+  border-radius:8px;
+  margin-bottom:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  font-size:0.85rem;
+  font-weight:600;
+  flex-wrap:wrap;
+}
+.reminder-banner button{
+  background:none;
+  border:none;
+  color:var(--ink-soft);
+  font-size:1rem;
+  cursor:pointer;
+  line-height:1;
+}
 
 .toast{
   position:fixed;
