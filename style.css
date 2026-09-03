@@ -10,6 +10,8 @@
   --sage-light: #E4E9E1;
   --gold: #C79A4B;
   --gold-light: #F2E4D5;
+  --plum: #8C6FA0;
+  --plum-light: #EAE1EF;
   --danger: #B8503F;
   --radius: 4px;
 }
@@ -60,16 +62,16 @@ a{ text-decoration:none; color:inherit; }
 
 /* ===== Home / hero ===== */
 .hero{
-  background:var(--ink);
+  background:radial-gradient(120% 140% at 50% -10%, #26392F 0%, var(--ink) 55%);
   color:var(--paper);
-  border-radius:10px;
-  padding:52px 26px 44px;
+  border-radius:14px;
+  padding:56px 26px 46px;
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
   gap:10px;
-  box-shadow:0 10px 28px rgba(28,43,38,0.22);
+  box-shadow:0 14px 34px rgba(28,43,38,0.28);
   position:relative;
   overflow:hidden;
 }
@@ -78,15 +80,19 @@ a{ text-decoration:none; color:inherit; }
   position:absolute;
   top:0; right:0; left:0;
   height:4px;
-  background:linear-gradient(90deg, var(--brick), var(--gold), var(--sage));
+  background:linear-gradient(90deg, var(--brick), var(--gold), var(--sage), var(--plum));
 }
-.hero .tooth-mark{ font-size:2.4rem; }
+.hero .title-row{ gap:14px; }
+.hero .tooth-mark{
+  font-size:2.6rem;
+  filter:drop-shadow(0 0 18px rgba(199,154,75,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
 .hero h1{
   font-family:'Cairo', sans-serif;
   font-weight:800;
-  font-size:2.1rem;
+  font-size:2.15rem;
   margin:0;
-  letter-spacing:0.3px;
+  letter-spacing:0.4px;
 }
 
 .nav-cards{
@@ -98,31 +104,49 @@ a{ text-decoration:none; color:inherit; }
 .nav-card{
   background:var(--paper);
   border:1px solid var(--line);
-  border-radius:8px;
-  padding:24px 18px;
+  border-radius:10px;
+  padding:26px 18px 22px;
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
-  gap:10px;
-  transition:transform .15s, box-shadow .15s, border-color .15s;
+  gap:12px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(28,43,38,0.05);
 }
+.nav-card::before{
+  content:"";
+  position:absolute;
+  top:0; right:0; left:0;
+  height:3px;
+  background:var(--accent, var(--sage));
+  transform:scaleX(0);
+  transform-origin:center;
+  transition:transform .2s ease;
+}
+.nav-card:hover::before{ transform:scaleX(1); }
 .nav-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 22px rgba(28,43,38,0.12);
-  border-color:var(--sage);
+  transform:translateY(-4px);
+  box-shadow:0 14px 28px rgba(28,43,38,0.14);
+  border-color:var(--accent, var(--sage));
 }
 .nav-card .icon{
-  width:52px;height:52px;
+  width:56px;height:56px;
   border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;
+  font-size:1.6rem;
+  background:radial-gradient(circle at 35% 30%, #fff, var(--accent-light, var(--sage-light)));
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.04);
+  transition:transform .2s ease;
 }
-.nav-card.card-add .icon{ background:var(--sage-light); }
-.nav-card.card-search .icon{ background:var(--gold-light); }
-.nav-card.card-finance .icon{ background:#EAD9D4; }
-.nav-card.card-appointments .icon{ background:var(--sage-light); }
+.nav-card:hover .icon{ transform:scale(1.08); }
+.nav-card.card-add{ --accent:var(--sage); --accent-light:var(--sage-light); }
+.nav-card.card-search{ --accent:var(--gold); --accent-light:var(--gold-light); }
+.nav-card.card-finance{ --accent:var(--brick); --accent-light:#EAD9D4; }
+.nav-card.card-appointments{ --accent:var(--plum); --accent-light:var(--plum-light); }
 .nav-card .title{ font-family:'Cairo', sans-serif; font-weight:700; font-size:1.05rem; color:var(--ink); }
 .nav-card .desc{ font-size:0.82rem; color:var(--ink-soft); line-height:1.6; }
 
