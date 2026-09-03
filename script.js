@@ -734,6 +734,112 @@ window.deleteExpense = async function(id){
   showToast('تم حذف المصروف');
 };
 
+/* =========================================================
+   PAGE: appointments.html — upcoming visits as tickets,
+   visible to both owner and assistant
+   ========================================================= */
+function initAppointmentsPage(){
+  const list = document.getElementById('appt-list');
+  if(!list) return;
+  renderAppointments();
+}
+
+function renderAppointments(){
+  const list = document.getElementById('appt-list');
+  const todayStr = new Date().toISOString().slice(0,10);
+
+  let appts = [];
+  patients.forEach(p=>{
+    (p.visits||[]).forEach(v=>{
+      if(v.next){
+        appts.push({
+          patientName: p.name,
+          phone: p.phone,
+          date: v.next,
+          lastTreatment: v.treatment
+        });
+      }
+    });
+  });
+  appts.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
+
+  document.getElementById('appt-count').textContent =
+    appts.length ? `عدد المواعيد القادمة: ${appts.length}` : '';
+
+  if(appts.length === 0){
+    list.innerHTML = `<div class="empty-state">مفيش أي مواعيد زيارة قادمة متسجلة حاليًا.</div>`;
+    return;
+  }
+
+  list.innerHTML = appts.map(a => {
+    const isOverdue = a.date < todayStr;
+    const isToday = a.date === todayStr;
+    let statusTag = '';
+    if(isOverdue) statusTag = '<span class="tag expense">متأخر</span>';
+    else if(isToday) statusTag = '<span class="tag manual">النهاردة</span>';
+    else statusTag = '<span class="tag">قادم</span>';
+
+    return `
+      <div class="appt-ticket ${isOverdue ? 'overdue' : ''}">
+        <div class="appt-main">
+          <div class="appt-name">${escapeHtml(a.patientName)}</div>
+          <div class="appt-meta">
+            ${a.phone ? '📞 ' + escapeHtml(a.phone) : ''}
+            ${a.lastTreatment ? '<br>آخر علاج: ' + escapeHtml(a.lastTreatment) : ''}
+          </div>
+        </div>
+        <div class="appt-side">
+          <div class="appt-date">${formatDate(a.date)}</div>
+          ${statusTag}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* =========================================================
+   Reminder banner — shows on any page if a patient's next
+   visit is today or tomorrow
+   ========================================================= */
+function checkAppointmentReminders(){
+  if(!document.querySelector('.hero')) return; // الصفحة الرئيسية بس
+
+  const todayStr = new Date().toISOString().slice(0,10);
+  const tmrDate = new Date();
+  tmrDate.setDate(tmrDate.getDate() + 1);
+  const tomorrowStr = tmrDate.toISOString().slice(0,10);
+
+  let todayList = [], tomorrowList = [];
+  patients.forEach(p=>{
+    (p.visits||[]).forEach(v=>{
+      if(v.next === todayStr) todayList.push(p.name);
+      else if(v.next === tomorrowStr) tomorrowList.push(p.name);
+    });
+  });
+
+  if(todayList.length === 0 && tomorrowList.length === 0) return;
+  showReminderBanner(todayList, tomorrowList);
+}
+
+function showReminderBanner(todayList, tomorrowList){
+  if(document.getElementById('reminder-banner')) return;
+  const wrap = document.querySelector('.wrap');
+  if(!wrap) return;
+
+  let parts = [];
+  if(todayList.length) parts.push(`📅 النهاردة: ${todayList.join('، ')}`);
+  if(tomorrowList.length) parts.push(`🔔 بكرة: ${tomorrowList.join('، ')}`);
+
+  const banner = document.createElement('div');
+  banner.id = 'reminder-banner';
+  banner.className = 'reminder-banner';
+  banner.innerHTML = `
+    <span>${parts.join(' — ')}</span>
+    <button onclick="document.getElementById('reminder-banner').remove()">✕</button>
+  `;
+  wrap.prepend(banner);
+}
+
 /* ===== Boot ===== */
 (async function(){
   await requireAuth();
@@ -742,4 +848,6 @@ window.deleteExpense = async function(id){
   initNewCasePage();
   initSearchPage();
   initFinancePage();
+  initAppointmentsPage();
+  checkAppointmentReminders();
 })();
